@@ -1,433 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCC Player Rankings Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCC Player Ranking Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
 
-        .header {
-            text-align: center;
-            padding: 2rem 0;
-            background: linear-gradient(90deg, rgba(220, 53, 69, 0.1) 0%, rgba(15, 23, 42, 0.1) 100%);
-            border-bottom: 3px solid #dc3545;
-            position: relative;
-        }
+    .logo {
+      width: 120px;
+      margin-bottom: 20px;
+      animation: fadeIn 1.2s ease-out forwards;
+      transform: scale(0.8);
+    }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23dc3545" opacity="0.1"/></svg>') repeat;
-            animation: float 20s ease-in-out infinite;
-        }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 30px;
+      animation: slideInDown 1s ease-out forwards;
+    }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
+    .container {
+      display: flex;
+      gap: 40px;
+      width: 100%;
+      max-width: 1000px;
+      animation: fadeInUp 1.2s ease-out forwards;
+    }
 
-        .logo {
-            width: 120px;
-            height: 120px;
-            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjZjVmNWY0Ii8+CjxwYXRoIGQ9Ik0yMDAgMzUwQzI4Mi44NDMgMzUwIDM1MCAyODIuODQzIDM1MCAyMDBTMjgyLjg0MyA1MCAyMDAgNTBTNTAgMTE3LjE1NyA1MCAyMDBTMTE3LjE1NyAzNTAgMjAwIDM1MFoiIGZpbGw9IiNkYzM1NDUiLz4KPHN2ZyB4PSIxNDAiIHk9IjEyMCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxNjAiIHZpZXdCb3g9IjAgMCAxMjAgMTYwIj4KPGc+CjxwYXRoIGQ9Ik0xMCA2MEw0MCA0MFY4MEw3MCA2MEw4MCA3MEw5MCA2MEw4MCA5MEw3MCA4MEwxMDAgMTAwTDgwIDEzMEw2MCA5MEw0MCA4MEw3MCA2MEw0MCA2MEw3MCAxMDBMOTAgNzBMNjAgNzBaIiBmaWxsPSIjMUExQTFBIiBzdHJva2U9IiNEQzM1NDUiIHN0cm9rZS13aWR0aD0iMyIvPgo8Y2lyY2xlIGN4PSI5MCIgY3k9IjMwIiByPSIxMiIgZmlsbD0iI0RDMzU0NSIgc3Ryb2tlPSIjMUExQTFBIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTEwIDEyMEw0MCA4MEw5MCA5MEwxMTAgMTMwSDEwWiIgZmlsbD0iI0RDMzU0NSIvPgo8L2c+Cjx0ZXh0IHg9IjYwIiB5PSIxNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI0OCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1DQzwvdGV4dD4KPC9zdmc+Cjwvc3ZnPg==') center/cover;
-            border-radius: 50%;
-            display: inline-block;
-            margin-bottom: 1rem;
-            animation: pulse 2s ease-in-out infinite;
-            border: 3px solid #dc3545;
-            position: relative;
-            z-index: 1;
-        }
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      animation: slideInLeft 1s ease-out forwards;
+    }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(145deg, #ff4757, #ff6b81);
+      color: #fff;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
 
-        .club-name {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(45deg, #dc3545, #1a1a1a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(145deg, #ff6b81, #ff4757);
+    }
 
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
-        }
+    .ranking-table {
+      flex-grow: 1;
+      background-color: #1e2a38;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      animation: fadeInUp 1.2s ease-out forwards;
+      transition: transform 0.5s;
+    }
 
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+    .ranking-table:hover {
+      transform: translateY(-5px);
+    }
 
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
 
-        .control-group {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
+    th, td {
+      text-align: left;
+      padding: 10px 15px;
+      border-bottom: 1px solid #3e4c59;
+    }
 
-        .control-group h3 {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: #dc3545;
-            font-size: 1.1rem;
-        }
+    th {
+      font-size: 1rem;
+      color: #ffd32a;
+    }
 
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: 2px solid #dc3545;
-            background: transparent;
-            color: white;
-            cursor: pointer;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
+    td {
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.05);
+      transform: scale(1.01);
+    }
 
-        .btn:hover::before {
-            left: 100%;
-        }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .btn:hover {
-            background: #dc3545;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-        .btn.active {
-            background: #dc3545;
-            box-shadow: 0 0 20px rgba(220, 53, 69, 0.6);
-        }
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .rankings-table {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
-
-        .table-header {
-            display: grid;
-            grid-template-columns: 1fr 3fr 2fr 2fr;
-            gap: 1rem;
-            padding: 1rem;
-            background: linear-gradient(90deg, #dc3545, #1a1a1a);
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            font-weight: bold;
-        }
-
-        .player-row {
-            display: grid;
-            grid-template-columns: 1fr 3fr 2fr 2fr;
-            gap: 1rem;
-            padding: 1.2rem 1rem;
-            background: rgba(255, 255, 255, 0.03);
-            margin-bottom: 0.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-            opacity: 0;
-            animation: slideInUp 0.5s ease forwards;
-        }
-
-        .player-row:nth-child(even) {
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .player-row:hover {
-            background: rgba(220, 53, 69, 0.15);
-            border-left-color: #dc3545;
-            transform: translateX(10px);
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .rank {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #dc3545;
-            display: flex;
-            align-items: center;
-        }
-
-        .player-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .stat-value {
-            font-weight: 600;
-            color: #10b981;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            font-size: 1.2rem;
-            opacity: 0.7;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(220, 53, 69, 0.3);
-            border-top: 4px solid #dc3545;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .table-header,
-            .player-row {
-                grid-template-columns: 0.5fr 2fr 1.5fr 1.5fr;
-                gap: 0.5rem;
-                padding: 1rem 0.5rem;
-            }
-            
-            .club-name {
-                font-size: 2rem;
-            }
-        }
-
-        .trophy {
-            display: inline-block;
-            margin-right: 0.5rem;
-        }
-
-        .current-selection {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 1.3rem;
-            color: #dc3545;
-            font-weight: 600;
-        }
-    </style>
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">MCC</div>
-        <h1 class="club-name">MADANGIR CRICKET CLUB</h1>
-        <p class="subtitle">Player Rankings Dashboard</p>
+  <img src="photo_2025-07-20_16-42-14-removebg-preview.png" alt="MCC Logo" class="logo">
+  <h1>MCC Player Ranking Dashboard</h1>
+
+  <div class="container">
+    <div class="side-panel" id="format-buttons">
+      <button onclick="setFormat('T20')">T20</button>
+      <button onclick="setFormat('ODI')">ODI</button>
+      <button onclick="setFormat('Test')">Test</button>
     </div>
 
-    <div class="dashboard-container">
-        <div class="controls">
-            <div class="control-group">
-                <h3>📋 Format</h3>
-                <button class="btn format-btn active" data-format="t20">T20</button>
-                <button class="btn format-btn" data-format="odi">ODI</button>
-                <button class="btn format-btn" data-format="test">Tests</button>
-            </div>
-            <div class="control-group">
-                <h3>👥 Category</h3>
-                <button class="btn category-btn active" data-category="batsmen">🏏 Batsmen</button>
-                <button class="btn category-btn" data-category="bowler">⚡ Bowler</button>
-            </div>
-        </div>
+    <div class="ranking-table">
+      <table>
+        <thead>
+          <tr>
+            <tr>
+                <th>Rank</th>
+                <th>Player Name</th>
+                <th id="stat-header">Runs</th>
+                <th>Points</th>
+            </tr>
 
-        <div class="current-selection">
-            Showing: <span id="current-format">T20</span> - <span id="current-category">Batsmen</span>
-        </div>
-
-        <div class="rankings-table">
-            <div class="table-header">
-                <div>Rank</div>
-                <div>Player Name</div>
-                <div id="stat-header">Runs</div>
-                <div>Points</div>
-            </div>
-            
-            <div id="rankings-content">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    Loading rankings...
-                </div>
-            </div>
-        </div>
+          </tr>
+        </thead>
+        <tbody id="ranking-body">
+          <!-- Data will be inserted here -->
+        </tbody>
+      </table>
     </div>
 
-    <script>
-        // Sample data for different formats and categories
-        const playerData = {
-            t20: {
-                batsmen: [
-                    { name: "Animesh", runs: 325, points: 65 },
-                    { name: "Sayan", runs: 165, points: 33 },
-                    { name: "Deepanshu", runs: 123, points: 24.6 },
-                    { name: "Saahil", runs: 117, points: 23.4 },
-                    { name: "Manthan", runs: 114, points: 22.8 }
-                ],
-                bowler: [
-                    { name: "Sujal", wickets: 10, points: 5 },
-                    { name: "Farhan", wickets: 9, points: 4.5 },
-                    { name: "Junaid", wickets: 8, points: 4 },
-                    { name: "Sameer Siddiqui", wickets: 7, points: 3.5 },
-                    { name: "Manthan", wickets: 17, points: 3.5 }
-                ]
-            },
-            odi: {
-                batsmen: [
-                    { name: "No Data", runs: 0, points: 0 },
-                    { name: "No Data", runs: 0, points: 0 },
-                    { name: "No Data", runs: 0, points: 0 },
-                    { name: "No Data", runs: 0, points: 0 },
-                    { name: "No Data", runs: 0, points: 0 }
-                ],
-                bowler: [
-                    { name: "No Data", wickets: 0, points: 0 },
-                    { name: "No Data", wickets: 0, points: 0 },
-                    { name: "No Data", wickets: 0, points: 0 },
-                    { name: "No Data", wickets: 0, points: 0 },
-                    { name: "No Data", wickets: 0, points: 0 }
-                ]
-            },
-            test: {
-                batsmen: [
-                    { name: "Deepanshu", runs: 100, points: 20 },
-                    { name: "Manthan", runs: 84, points: 16.8 },
-                    { name: "Sayan", runs: 51, points: 10.2 },
-                    { name: "Ankit Pal", runs: 43, points: 8.6 },
-                    { name: "Animesh", runs: 41, points: 8.2 }
-                ],
-                bowler: [
-                    { name: "Deepanshu", wickets: 17, points: 8.5 },
-                    { name: "Vishu", wickets: 11, points: 5.5 },
-                    { name: "Manthan", wickets: 8, points: 4 },
-                    { name: "Rahul", wickets: 6, points: 3 },
-                    { name: "Ayaan", wickets: 5, points: 2.5 }
-                ]
-            }
-        };
+    <div class="side-panel" id="role-buttons">
+      <button onclick="setRole('Batsman')">Batsmen</button>
+      <button onclick="setRole('Bowler')">Bowlers</button>
+    </div>
+  </div>
 
-        let currentFormat = 't20';
-        let currentCategory = 'batsmen';
+  <script>
+    const sampleData = {
+      T20: {
+        Batsman: [
+          ['1', 'Animesh', 325, 65.0],
+          ['2', 'Sayan', 165, 33.0],
+          ['3', 'Deepanshu', 123, 24.6],
+          ['4', 'Saahil', 117, 23.4],
+          ['5', 'Manthan', 114, 22.8]
+        ],
+        Bowler: [
+          ['1', 'Sujal', 10, 5.0],
+          ['2', 'Farhan', 9, 4.5],
+          ['3', 'Junaid', 8, 4.0],
+          ['4', 'Sameer Siddiqui', 7, 3.5],
+          ['5', 'Manthan', 7, 3.5]
+        ]
+      },
+      ODI: {
+        Batsman: [
+          ['1', 'No Data Available', 0, 0],
+          ['2', 'No Data Available', 0, 0],
+          ['3', 'No Data Available', 0, 0],
+          ['4', 'No Data Available', 0, 0],
+          ['5', 'No Data Available', 0, 0]
+        ],
+        Bowler: [
+          ['1', 'No Data Available', 0, 0],
+          ['2', 'No Data Available', 0, 0],
+          ['3', 'No Data Available', 0, 0],
+          ['4', 'No Data Available', 0, 0],
+          ['5', 'No Data Available', 0, 0]
+        ]
+      },
+      Test: {
+        Batsman: [
+          ['1', 'Deepanshu', 100, 20],
+          ['2', 'Manthan', 84, 16.8],
+          ['3', 'Sayan', 51, 10.2],
+          ['4', 'Ankit', 43, 8.6],
+          ['5', 'Animesh', 41, 8.2]
+        ],
+        Bowler: [
+          ['1', 'Deepanshu', 17, 8.5],
+          ['2', 'Vishu', 11, 5.5],
+          ['3', 'Manthan', 8, 4.0],
+          ['4', 'Rahul', 6, 3.0],
+          ['5', 'Ayaan', 5, 2.5]
+        ]
+      }
+    };
 
-        function updateRankings() {
-            const data = playerData[currentFormat][currentCategory];
-            const statHeader = document.getElementById('stat-header');
-            const content = document.getElementById('rankings-content');
-            
-            // Update stat header
-            statHeader.textContent = currentCategory === 'batsmen' ? 'Runs' : 'Wickets';
-            
-            // Show loading
-            content.innerHTML = '<div class="loading"><div class="spinner"></div>Loading rankings...</div>';
-            
-            // Simulate loading delay
-            setTimeout(() => {
-                let html = '';
-                data.forEach((player, index) => {
-                    const rank = index + 1;
-                    const statValue = currentCategory === 'batsmen' ? player.runs : player.wickets;
-                    
-                    html += `
-                        <div class="player-row" style="animation-delay: ${index * 0.1}s">
-                            <div class="rank">
-                                ${rank}
-                            </div>
-                            <div class="player-name">${player.name}</div>
-                            <div class="stat-value">${statValue}</div>
-                            <div class="stat-value">${player.points}</div>
-                        </div>
-                    `;
-                });
-                
-                content.innerHTML = html;
-                
-                // Update current selection display
-                document.getElementById('current-format').textContent = currentFormat.toUpperCase();
-                document.getElementById('current-category').textContent = 
-                    currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1);
-            }, 800);
-        }
+    let currentFormat = 'T20';
+    let currentRole = 'Batsman';
 
-        // Event listeners
-        document.querySelectorAll('.format-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFormat = btn.dataset.format;
-                updateRankings();
-            });
+    function renderTable() {
+      const tbody = document.getElementById('ranking-body');
+      tbody.innerHTML = '';
+      const data = sampleData[currentFormat][currentRole];
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        row.forEach(col => {
+          const td = document.createElement('td');
+          td.textContent = col;
+          tr.appendChild(td);
         });
+        tbody.appendChild(tr);
+      });
+    }
 
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = btn.dataset.category;
-                updateRankings();
-            });
-        });
+    function updateStatHeader() {
+        const statHeader = document.getElementById('stat-header');
+        statHeader.textContent = currentRole === 'Bowler' ? 'Wickets' : 'Runs';
+    }
 
-        // Initialize
-        updateRankings();
-    </script>
+    function setFormat(format) {
+        currentFormat = format;
+        renderTable();
+        updateStatHeader();
+    }
+
+    function setRole(role) {
+        currentRole = role;
+        renderTable();
+        updateStatHeader();
+    }
+
+    // Initial render
+    renderTable();
+  </script>
 </body>
 </html>
