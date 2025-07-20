@@ -1,281 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MCC Player Ranking Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCC Player Ranking Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to right, #FFFFFF 0%, #4682B4 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333; /* Default body text color for general content */
+        }
+        .dashboard-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 90%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            color: #fff; /* Keeping elements directly inside dashboard-container white (e.g., button text) */
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: contain;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px;
+        }
+        .club-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: #333; /* Changed club name color to dark gray */
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #333; /* Changed button text color to dark gray when not active */
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+        }
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        .btn.active {
+            background-color: #fca311; /* A vibrant orange for active state */
+            color: #1a1a1a;
+            box-shadow: 0 5px 15px rgba(252, 163, 17, 0.5);
+            transform: translateY(-2px);
+        }
+        .ranking-table-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .ranking-table th,
+        .ranking-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: #333; /* Changed table text color to dark gray for readability */
+        }
+        .ranking-table th {
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #333; /* Changed table header text color to dark gray */
+            background-color: rgba(0, 0, 0, 0.2);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .ranking-table tr:last-child td {
+            border-bottom: none;
+        }
+        .ranking-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        .ranking-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+        .ranking-table tbody tr:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .ranking-table td:first-child {
+            font-weight: 700;
+            color: #fca311; /* Keeping ranking number orange */
+        }
 
-    body {
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 40px 20px;
-      overflow-x: hidden;
-    }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ranking-table tbody tr {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .ranking-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        .ranking-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+        .ranking-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+        .ranking-table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+        .ranking-table tbody tr:nth-child(5) { animation-delay: 0.5s; }
 
-    .logo {
-      width: 120px;
-      margin-bottom: 20px;
-      animation: fadeIn 1.2s ease-out forwards;
-      transform: scale(0.8);
-    }
+        @keyframes slideInFromLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .header .button-group:first-of-type {
+            animation: slideInFromLeft 0.8s ease-out;
+        }
 
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 30px;
-      animation: slideInDown 1s ease-out forwards;
-    }
+        @keyframes slideInFromRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .header .button-group:last-of-type {
+            animation: slideInFromRight 0.8s ease-out;
+        }
 
-    .container {
-      display: flex;
-      gap: 40px;
-      width: 100%;
-      max-width: 1000px;
-      animation: fadeInUp 1.2s ease-out forwards;
-    }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        .logo-container {
+            animation: bounceIn 0.8s ease-out;
+        }
 
-    .side-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      animation: slideInLeft 1s ease-out forwards;
-    }
-
-    button {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      background: linear-gradient(145deg, #ff4757, #ff6b81);
-      color: #fff;
-      transition: all 0.4s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      background: linear-gradient(145deg, #ff6b81, #ff4757);
-    }
-
-    .ranking-table {
-      flex-grow: 1;
-      background-color: #1e2a38;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      animation: fadeInUp 1.2s ease-out forwards;
-      transition: transform 0.5s;
-    }
-
-    .ranking-table:hover {
-      transform: translateY(-5px);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 10px 15px;
-      border-bottom: 1px solid #3e4c59;
-    }
-
-    th {
-      font-size: 1rem;
-      color: #ffd32a;
-    }
-
-    td {
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-    }
-
-    tr:hover td {
-      background-color: rgba(255, 255, 255, 0.05);
-      transform: scale(1.01);
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideInLeft {
-      from {
-        opacity: 0;
-        transform: translateX(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-  </style>
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .club-name {
+                font-size: 2rem;
+            }
+            .button-group {
+                justify-content: center;
+                width: 100%;
+            }
+            .btn {
+                flex-grow: 1;
+            }
+            .ranking-table th,
+            .ranking-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .dashboard-container {
+                padding: 20px;
+            }
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            .club-name {
+                font-size: 1.8rem;
+            }
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <img src="photo_2025-07-20_16-42-14-removebg-preview.png" alt="MCC Logo" class="logo">
-  <h1>MCC Player Ranking Dashboard</h1>
+    <div class="dashboard-container">
+        <div class="header">
+            <div class="button-group">
+                <button class="btn active" data-format="T20">T20</button>
+                <button class="btn" data-format="ODI">ODI</button>
+                <button class="btn" data-format="Tests">Tests</button>
+            </div>
+            <div class="logo-container">
+                <img src="photo_2025-07-20_16-42-14-removebg-preview.png" alt="MCC Logo" class="logo">
+                <h1 class="club-name"></h1>
+            </div>
+            <div class="button-group">
+                <button class="btn active" data-type="Batsmen">Batsmen</button>
+                <button class="btn" data-type="Bowler">Bowler</button>
+            </div>
+        </div>
 
-  <div class="container">
-    <div class="side-panel" id="format-buttons">
-      <button onclick="setFormat('T20')">T20</button>
-      <button onclick="setFormat('ODI')">ODI</button>
-      <button onclick="setFormat('Test')">Test</button>
+        <div class="ranking-table-container">
+            <table class="ranking-table" id="rankingTable">
+                <thead>
+                    <tr>
+                        <th>Ranking</th>
+                        <th>Player Name</th>
+                        <th>Runs</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Player data will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="ranking-table">
-      <table>
-        <thead>
-          <tr>
-            <tr>
-                <th>Rank</th>
-                <th>Player Name</th>
-                <th id="stat-header">Runs</th>
-                <th>Points</th>
-            </tr>
+    <script>
+        // Sample data for players
+        const playerData = {
+            T20: {
+                Batsmen: [
+                    { rank: 1, name: "Animesh", runs: 325, points: 162.5 },
+                    { rank: 2, name: "Sayan", runs: 162, points: 81.0  },
+                    { rank: 3, name: "Deepanshu", runs: 123, points: 61.5},
+                    { rank: 4, name: "Saahil", runs: 117, points: 58.5 },
+                    { rank: 5, name: "Manthan", runs: 114, points: 57.0 }
+                ],
+                Bowler: [
+                    { rank: 1, name: "Sujal", wickets: 10, points: 100.0 },
+                    { rank: 2, name: "Farhan", wickets: 9, points: 90.0 },
+                    { rank: 3, name: "Junaid", wickets: 8, points: 80.0 },
+                    { rank: 4, name: "Sameer Siddiqui", wickets: 7, points: 70.0 },
+                    { rank: 5, name: "Manthan", wickets: 7, points: 70.0 }
+                ]
+            },
+            ODI: {
+                Batsmen: [
+                    { rank: 1, name: "No Data Available", runs: 0, points: 0 },
+                    { rank: 2, name: "No Data Available", runs: 0, points: 0 },
+                    { rank: 3, name: "No Data Available", runs: 0, points: 0 },
+                    { rank: 4, name: "No Data Available", runs: 0, points: 0 },
+                    { rank: 5, name: "No Data Available", runs: 0, points: 0 }
+                ]
+                ,
+                Bowler: [
+                    { rank: 1, name: "No Data Available", wickets: 0, points: 0 },
+                    { rank: 2, name: "No Data Available", wickets: 0, points: 0 },
+                    { rank: 3, name: "No Data Available", wickets: 0, points: 0 },
+                    { rank: 4, name: "No Data Available", wickets: 0, points: 0 },
+                    { rank: 5, name: "No Data Available", wickets: 0, points: 0 }
+                ]
+            },
+            Tests: {
+                Batsmen: [
+                    { rank: 1, name: "Deepanshu", runs: 100, points: 30 },
+                    { rank: 2, name: "Manthan", runs: 84, points: 25.2 },
+                    { rank: 3, name: "Sayan", runs: 51, points: 15.3 },
+                    { rank: 4, name: "Ankit", runs: 43, points: 12.9 },
+                    { rank: 5, name: "Animesh", runs: 41, points: 12.3 }
+                ],
+                Bowler: [
+                    { rank: 1, name: "Deepanshu", wickets: 17, points: 340.0 },
+                    { rank: 2, name: "Vishu", wickets: 11, points: 220.0 },
+                    { rank: 3, name: "Manthan", wickets: 8, points: 160.0 },
+                    { rank: 4, name: "Rahul", wickets: 6, points: 120.0 },
+                    { rank: 5, name: "Ayaan", wickets: 5, points: 100.0 }
+                ]
+            }
+        };
 
-          </tr>
-        </thead>
-        <tbody id="ranking-body">
-          <!-- Data will be inserted here -->
-        </tbody>
-      </table>
-    </div>
+        let currentFormat = 'T20';
+        let currentPlayerType = 'Batsmen';
 
-    <div class="side-panel" id="role-buttons">
-      <button onclick="setRole('Batsman')">Batsmen</button>
-      <button onclick="setRole('Bowler')">Bowlers</button>
-    </div>
-  </div>
+        const formatButtons = document.querySelectorAll('.button-group:first-of-type .btn');
+        const typeButtons = document.querySelectorAll('.button-group:last-of-type .btn');
+        const rankingTableBody = document.querySelector('#rankingTable tbody');
 
-  <script>
-    const sampleData = {
-      T20: {
-        Batsman: [
-          ['1', 'Animesh', 325, 65.0],
-          ['2', 'Sayan', 165, 33.0],
-          ['3', 'Deepanshu', 123, 24.6],
-          ['4', 'Saahil', 117, 23.4],
-          ['5', 'Manthan', 114, 22.8]
-        ],
-        Bowler: [
-          ['1', 'Sujal', 10, 5.0],
-          ['2', 'Farhan', 9, 4.5],
-          ['3', 'Junaid', 8, 4.0],
-          ['4', 'Sameer Siddiqui', 7, 3.5],
-          ['5', 'Manthan', 7, 3.5]
-        ]
-      },
-      ODI: {
-        Batsman: [
-          ['1', 'No Data Available', 0, 0],
-          ['2', 'No Data Available', 0, 0],
-          ['3', 'No Data Available', 0, 0],
-          ['4', 'No Data Available', 0, 0],
-          ['5', 'No Data Available', 0, 0]
-        ],
-        Bowler: [
-          ['1', 'No Data Available', 0, 0],
-          ['2', 'No Data Available', 0, 0],
-          ['3', 'No Data Available', 0, 0],
-          ['4', 'No Data Available', 0, 0],
-          ['5', 'No Data Available', 0, 0]
-        ]
-      },
-      Test: {
-        Batsman: [
-          ['1', 'Deepanshu', 100, 20],
-          ['2', 'Manthan', 84, 16.8],
-          ['3', 'Sayan', 51, 10.2],
-          ['4', 'Ankit', 43, 8.6],
-          ['5', 'Animesh', 41, 8.2]
-        ],
-        Bowler: [
-          ['1', 'Deepanshu', 17, 8.5],
-          ['2', 'Vishu', 11, 5.5],
-          ['3', 'Manthan', 8, 4.0],
-          ['4', 'Rahul', 6, 3.0],
-          ['5', 'Ayaan', 5, 2.5]
-        ]
-      }
-    };
+        // Function to update the table based on selected format and player type
+        function updateTable() {
+            const data = playerData[currentFormat][currentPlayerType];
+            rankingTableBody.innerHTML = ''; // Clear existing rows
 
-    let currentFormat = 'T20';
-    let currentRole = 'Batsman';
+            data.forEach(player => {
+                const row = document.createElement('tr');
+                const valueKey = currentPlayerType === 'Batsmen' ? 'runs' : 'wickets';
+                row.innerHTML = `
+                    <td>${player.rank}</td>
+                    <td>${player.name}</td>
+                    <td>${player[valueKey]}</td>
+                    <td>${player.points}</td>
+                `;
+                rankingTableBody.appendChild(row);
+            });
+        }
 
-    function renderTable() {
-      const tbody = document.getElementById('ranking-body');
-      tbody.innerHTML = '';
-      const data = sampleData[currentFormat][currentRole];
-      data.forEach(row => {
-        const tr = document.createElement('tr');
-        row.forEach(col => {
-          const td = document.createElement('td');
-          td.textContent = col;
-          tr.appendChild(td);
+        // Event listeners for format buttons
+        formatButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                formatButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentFormat = button.dataset.format;
+                updateTable();
+            });
         });
-        tbody.appendChild(tr);
-      });
-    }
 
-    function updateStatHeader() {
-        const statHeader = document.getElementById('stat-header');
-        statHeader.textContent = currentRole === 'Bowler' ? 'Wickets' : 'Runs';
-    }
+        // Event listeners for player type buttons
+        typeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                typeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentPlayerType = button.dataset.type;
+                // Update the header of the table based on player type
+                const runsHeader = document.querySelector('#rankingTable th:nth-child(3)');
+                runsHeader.textContent = currentPlayerType === 'Batsmen' ? 'Runs' : 'Wickets';
+                updateTable();
+            });
+        });
 
-    function setFormat(format) {
-        currentFormat = format;
-        renderTable();
-        updateStatHeader();
-    }
-
-    function setRole(role) {
-        currentRole = role;
-        renderTable();
-        updateStatHeader();
-    }
-
-    // Initial render
-    renderTable();
-  </script>
+        // Initial table load
+        document.addEventListener('DOMContentLoaded', updateTable);
+    </script>
 </body>
 </html>
