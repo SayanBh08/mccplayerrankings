@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCC Player Rankings Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            background: linear-gradient(90deg, rgba(220, 53, 69, 0.1) 0%, rgba(15, 23, 42, 0.1) 100%);
+            border-bottom: 3px solid #dc3545;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23dc3545" opacity="0.1"/></svg>') repeat;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjZjVmNWY0Ii8+CjxwYXRoIGQ9Ik0yMDAgMzUwQzI4Mi44NDMgMzUwIDM1MCAyODIuODQzIDM1MCAyMDBTMjgyLjg0MyA1MCAyMDAgNTBTNTAgMTE3LjE1NyA1MCAyMDBTMTE3LjE1NyAzNTAgMjAwIDM1MFoiIGZpbGw9IiNkYzM1NDUiLz4KPHN2ZyB4PSIxNDAiIHk9IjEyMCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxNjAiIHZpZXdCb3g9IjAgMCAxMjAgMTYwIj4KPGc+CjxwYXRoIGQ9Ik0xMCA2MEw0MCA0MFY4MEw3MCA2MEw4MCA3MEw5MCA2MEw4MCA5MEw3MCA4MEwxMDAgMTAwTDgwIDEzMEw2MCA5MEw0MCA4MEw3MCA2MEw0MCA2MEw3MCAxMDBMOTAgNzBMNjAgNzBaIiBmaWxsPSIjMUExQTFBIiBzdHJva2U9IiNEQzM1NDUiIHN0cm9rZS13aWR0aD0iMyIvPgo8Y2lyY2xlIGN4PSI5MCIgY3k9IjMwIiByPSIxMiIgZmlsbD0iI0RDMzU0NSIgc3Ryb2tlPSIjMUExQTFBIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTEwIDEyMEw0MCA4MEw5MCA5MEwxMTAgMTMwSDEwWiIgZmlsbD0iI0RDMzU0NSIvPgo8L2c+Cjx0ZXh0IHg9IjYwIiB5PSIxNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI0OCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk1DQzwvdGV4dD4KPC9zdmc+Cjwvc3ZnPg==') center/cover;
+            border-radius: 50%;
+            display: inline-block;
+            margin-bottom: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+            border: 3px solid #dc3545;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .club-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #dc3545, #1a1a1a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .control-group h3 {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #dc3545;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #dc3545;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: #dc3545;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn.active {
+            background: #dc3545;
+            box-shadow: 0 0 20px rgba(220, 53, 69, 0.6);
+        }
+
+        .rankings-table {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 3fr 2fr 2fr;
+            gap: 1rem;
+            padding: 1rem;
+            background: linear-gradient(90deg, #dc3545, #1a1a1a);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .player-row {
+            display: grid;
+            grid-template-columns: 1fr 3fr 2fr 2fr;
+            gap: 1rem;
+            padding: 1.2rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            opacity: 0;
+            animation: slideInUp 0.5s ease forwards;
+        }
+
+        .player-row:nth-child(even) {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .player-row:hover {
+            background: rgba(220, 53, 69, 0.15);
+            border-left-color: #dc3545;
+            transform: translateX(10px);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #dc3545;
+            display: flex;
+            align-items: center;
+        }
+
+        .player-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(220, 53, 69, 0.3);
+            border-top: 4px solid #dc3545;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .table-header,
+            .player-row {
+                grid-template-columns: 0.5fr 2fr 1.5fr 1.5fr;
+                gap: 0.5rem;
+                padding: 1rem 0.5rem;
+            }
+            
+            .club-name {
+                font-size: 2rem;
+            }
+        }
+
+        .trophy {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .current-selection {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.3rem;
+            color: #dc3545;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">MCC</div>
+        <h1 class="club-name">MADANGIR CRICKET CLUB</h1>
+        <p class="subtitle">Player Rankings Dashboard</p>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="controls">
+            <div class="control-group">
+                <h3>📋 Format</h3>
+                <button class="btn format-btn active" data-format="t20">T20</button>
+                <button class="btn format-btn" data-format="odi">ODI</button>
+                <button class="btn format-btn" data-format="test">Tests</button>
+            </div>
+            <div class="control-group">
+                <h3>👥 Category</h3>
+                <button class="btn category-btn active" data-category="batsmen">🏏 Batsmen</button>
+                <button class="btn category-btn" data-category="bowler">⚡ Bowler</button>
+            </div>
+        </div>
+
+        <div class="current-selection">
+            Showing: <span id="current-format">T20</span> - <span id="current-category">Batsmen</span>
+        </div>
+
+        <div class="rankings-table">
+            <div class="table-header">
+                <div>Rank</div>
+                <div>Player Name</div>
+                <div id="stat-header">Runs</div>
+                <div>Points</div>
+            </div>
+            
+            <div id="rankings-content">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading rankings...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for different formats and categories
+        const playerData = {
+            t20: {
+                batsmen: [
+                    { name: "Animesh", runs: 325, points: 65 },
+                    { name: "Sayan", runs: 165, points: 33 },
+                    { name: "Deepanshu", runs: 123, points: 24.6 },
+                    { name: "Saahil", runs: 117, points: 23.4 },
+                    { name: "Manthan", runs: 114, points: 22.8 }
+                ],
+                bowler: [
+                    { name: "Sujal", wickets: 10, points: 5 },
+                    { name: "Farhan", wickets: 9, points: 4.5 },
+                    { name: "Junaid", wickets: 8, points: 4 },
+                    { name: "Sameer Siddiqui", wickets: 7, points: 3.5 },
+                    { name: "Manthan", wickets: 17, points: 3.5 }
+                ]
+            },
+            odi: {
+                batsmen: [
+                    { name: "No Data", runs: 0, points: 0 },
+                    { name: "No Data", runs: 0, points: 0 },
+                    { name: "No Data", runs: 0, points: 0 },
+                    { name: "No Data", runs: 0, points: 0 },
+                    { name: "No Data", runs: 0, points: 0 }
+                ],
+                bowler: [
+                    { name: "No Data", wickets: 0, points: 0 },
+                    { name: "No Data", wickets: 0, points: 0 },
+                    { name: "No Data", wickets: 0, points: 0 },
+                    { name: "No Data", wickets: 0, points: 0 },
+                    { name: "No Data", wickets: 0, points: 0 }
+                ]
+            },
+            test: {
+                batsmen: [
+                    { name: "Deepanshu", runs: 100, points: 20 },
+                    { name: "Manthan", runs: 84, points: 16.8 },
+                    { name: "Sayan", runs: 51, points: 10.2 },
+                    { name: "Ankit Pal", runs: 43, points: 8.6 },
+                    { name: "Animesh", runs: 41, points: 8.2 }
+                ],
+                bowler: [
+                    { name: "Deepanshu", wickets: 17, points: 8.5 },
+                    { name: "Vishu", wickets: 11, points: 5.5 },
+                    { name: "Manthan", wickets: 8, points: 4 },
+                    { name: "Rahul", wickets: 6, points: 3 },
+                    { name: "Ayaan", wickets: 5, points: 2.5 }
+                ]
+            }
+        };
+
+        let currentFormat = 't20';
+        let currentCategory = 'batsmen';
+
+        function updateRankings() {
+            const data = playerData[currentFormat][currentCategory];
+            const statHeader = document.getElementById('stat-header');
+            const content = document.getElementById('rankings-content');
+            
+            // Update stat header
+            statHeader.textContent = currentCategory === 'batsmen' ? 'Runs' : 'Wickets';
+            
+            // Show loading
+            content.innerHTML = '<div class="loading"><div class="spinner"></div>Loading rankings...</div>';
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                let html = '';
+                data.forEach((player, index) => {
+                    const rank = index + 1;
+                    const statValue = currentCategory === 'batsmen' ? player.runs : player.wickets;
+                    
+                    html += `
+                        <div class="player-row" style="animation-delay: ${index * 0.1}s">
+                            <div class="rank">
+                                ${rank}
+                            </div>
+                            <div class="player-name">${player.name}</div>
+                            <div class="stat-value">${statValue}</div>
+                            <div class="stat-value">${player.points}</div>
+                        </div>
+                    `;
+                });
+                
+                content.innerHTML = html;
+                
+                // Update current selection display
+                document.getElementById('current-format').textContent = currentFormat.toUpperCase();
+                document.getElementById('current-category').textContent = 
+                    currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1);
+            }, 800);
+        }
+
+        // Event listeners
+        document.querySelectorAll('.format-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFormat = btn.dataset.format;
+                updateRankings();
+            });
+        });
+
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                updateRankings();
+            });
+        });
+
+        // Initialize
+        updateRankings();
+    </script>
+</body>
+</html>
