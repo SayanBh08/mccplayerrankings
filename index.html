@@ -4,493 +4,609 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MCC Player Ranking Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    html, body {
-      height: 100%;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
       font-family: 'Inter', sans-serif;
+    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCC Player Ranking Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to right, #FFFFFF 0%, #4682B4 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333; /* Default body text color for general content */
+        }
+        .dashboard-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 90%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            color: #fff; /* Keeping elements directly inside dashboard-container white (e.g., button text) */
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: contain;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px;
+        }
+        .club-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: #333; /* Changed club name color to dark gray */
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #333; /* Changed button text color to dark gray when not active */
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+        }
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        .btn.active {
+            background-color: #fca311; /* A vibrant orange for active state */
+            color: #1a1a1a;
+            box-shadow: 0 5px 15px rgba(252, 163, 17, 0.5);
+            transform: translateY(-2px);
+        }
+        .ranking-table-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .ranking-table th,
+        .ranking-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: #333; /* Changed table text color to dark gray for readability */
+        }
+        .ranking-table th {
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #333; /* Changed table header text color to dark gray */
+            background-color: rgba(0, 0, 0, 0.2);
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .ranking-table tr:last-child td {
+            border-bottom: none;
+        }
+        .ranking-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        .ranking-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+        .ranking-table tbody tr:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .ranking-table td:first-child {
+            font-weight: 700;
+            color: #fca311; /* Keeping ranking number orange */
+        }
+
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
       min-height: 100vh;
-      background: linear-gradient(to right, #FFFFFF, #4682B4);
-      color: #222;
-    }
-    .dashboard-container {
-      background: rgba(255,255,255,0.12);
-      border-radius: 18px;
-      padding: 36px 24px 32px 24px;
-      box-shadow: 0 10px 32px rgba(0,0,0,0.14);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.2);
-      max-width: 1000px;
-      width: 95vw;
-      margin: 64px auto;
-      position: relative;
-      z-index: 1;
-    }
-    .header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 28px;
+      justify-content: flex-start;
+      padding: 40px 20px;
+      overflow-x: hidden;
     }
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ranking-table tbody tr {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .ranking-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        .ranking-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+        .ranking-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+        .ranking-table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+        .ranking-table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+
     .logo {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      object-fit: contain;
-      background: rgba(255,255,255,0.1);
+      width: 120px;
+      margin-bottom: 20px;
+      animation: fadeIn 1.2s ease-out forwards;
+      transform: scale(0.8);
     }
-    .club-name {
-      font-size: 2.2rem;
-      font-weight: 700;
-      text-shadow: 1px 2px 2px #dde;
-      margin-left: 8px;
-      color: #232323;
+        @keyframes slideInFromLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .header .button-group:first-of-type {
+            animation: slideInFromLeft 0.8s ease-out;
+        }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 30px;
+      animation: slideInDown 1s ease-out forwards;
     }
-    .button-group {
+        @keyframes slideInFromRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .header .button-group:last-of-type {
+            animation: slideInFromRight 0.8s ease-out;
+        }
+
+    .container {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 40px;
+      width: 100%;
+      max-width: 1000px;
+      animation: fadeInUp 1.2s ease-out forwards;
     }
-    .btn {
-      background: rgba(255,255,255,0.18);
-      color: #232323;
-      padding: 10px 20px;
-      border-radius: 12px;
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        .logo-container {
+            animation: bounceIn 0.8s ease-out;
+        }
+
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      animation: slideInLeft 1s ease-out forwards;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
       font-weight: 600;
-      border: none;
       cursor: pointer;
-      transition: 0.2s background, 0.2s color;
-      box-shadow: 0 2px 8px rgba(50,80,120,0.08);
-      font-size: 1rem;
+      background: linear-gradient(145deg, #ff4757, #ff6b81);
+      color: #fff;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
-    .btn.active {
-      background: #fca311;
-      color: #1a1a1a;
-      box-shadow: 0 4px 12px #fca31144;
+
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(145deg, #ff6b81, #ff4757);
     }
-    .btn:hover:not(.active) {
-      background: #f6d080;
-      color: #373737;
-    }
-    #signInBtn {
-      margin-left: 15px;
-      background: #fca311;
-      color: #191919;
-      border-radius: 10px;
-      font-weight: 700;
-      padding: 9px 24px;
-      font-size: 1rem;
-      border: none;
-      z-index: 10;
-      box-shadow: 0 6px 16px #fca31122;
-      transition: 0.12s;
-    }
-    #signInBtn:hover {
-      background: #ffd384;
-      color: #222;
-    }
-    .ranking-table-container {
-      background: rgba(255,255,255,0.18);
-      border-radius: 15px;
-      padding: 20px 12px;
-      box-shadow: 0 1px 9px #2222;
-      overflow-x: auto;
-      margin-top: 10px;
-    }
+
     .ranking-table {
+      flex-grow: 1;
+      background-color: #1e2a38;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      animation: fadeInUp 1.2s ease-out forwards;
+      transition: transform 0.5s;
+    }
+
+    .ranking-table:hover {
+      transform: translateY(-5px);
+    }
+
+    table {
       width: 100%;
       border-collapse: collapse;
-      text-align: left;
-    }
-    .ranking-table th,
-    .ranking-table td {
-      padding: 13px 10px;
-      border-bottom: 1px solid #ffffff22;
-      color: #232323;
-      background: none;
-    }
-    .ranking-table th {
-      font-weight: 700;
-      color: #212121;
-      background: #fcfcfc77;
-      text-transform: uppercase;
-    }
-    .ranking-table td:first-child {
-      color: #fca311;
-      font-weight: bold;
-    }
-    .ranking-table tr:last-child td {
-      border-bottom: none;
-    }
-    .ranking-table tbody tr:hover {
-      background: #fff7edaa;
-    }
-    @media (max-width: 620px) {
-      .dashboard-container {
-        padding: 10px;
-      }
-      .logo { width: 48px; height: 48px;}
-      .club-name { font-size: 1.3rem; }
-      .btn { font-size: .93rem; padding: 9px 12px;}
-    }
-    /* Admin Modal */
-    #adminModal {
-      position: fixed;
-      left: 0; top: 0; right: 0; bottom: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(30,42,60,0.65);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-    #adminModal.active { display: flex; }
-    .admin-modal-content {
-      background: #fff;
-      color: #222;
-      border-radius: 20px;
-      padding: 2.2rem 1.2rem 1.3rem 1.2rem;
-      width:98vw;
-      max-width: 420px;
-      margin: auto;
-      box-shadow: 0 2px 24px #8884;
-      position: relative;
-      animation: fadeInModal 0.23s;
-    }
-    @keyframes fadeInModal { from{opacity:0; transform: scale(0.93);} to{opacity:1; transform:scale(1);} }
-    .admin-modal-content label {
-      font-weight: 600;
-      font-size: 1rem;
-      color: #222;
-    }
-    .admin-modal-content input {
-      width: 100%;
-      padding: 7px 12px;
-      margin-bottom: 10px;
-      margin-top: 3px;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      font-size: 1rem;
-      background: #f9fafb;
-      color: #121212;
-    }
-    .admin-modal-content .admin-controls {
-      display: flex;
-      gap: 7px;
       margin-top: 10px;
     }
-    .admin-modal-content .btn-close {
-      position: absolute;
-      top: 10px; right: 14px;
-      font-size: 1.2em;
-      background: none;
-      border: none;
-      color: #fe4014;
-      font-weight: bold;
-      cursor: pointer;
+
+    th, td {
+      text-align: left;
+      padding: 10px 15px;
+      border-bottom: 1px solid #3e4c59;
     }
-    .admin-modal-content .btn-logout {
-      background: #e63946;
-      color: #fff;
-      border-radius: 8px;
-      padding: 7px 12px;
-      border:none;
-      font-size: .95em;
-      float: right;
-      margin-left: 4px;
-      margin-bottom: 4px;
+
+    th {
+      font-size: 1rem;
+      color: #ffd32a;
     }
-    .admin-modal-content .btn-logout:hover {
-      background: #ba181b;
+
+    td {
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
     }
-    .admin-error {
-      color: #d90429;
-      font-size: .97em;
-      margin: 6px 0 7px 0;
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.05);
+      transform: scale(1.01);
     }
-    .admin-modal-content h2 {
-      text-align:left;
-      font-size: 1.19rem;
-      font-weight: 700;
-      margin-bottom: 6px;
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    .admin-modal-content form {
-      width: 100%;
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
-    .admin-player-edit {
-      background: #f7fafc;
-      padding: .6em .8em .6em .8em;
-      border-radius: 8px;
-      margin-bottom: .45rem;
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    /* Responsive modal */
-    @media (max-width:520px){
-      .admin-modal-content { max-width:98vw; padding:1.2rem 0.2rem; }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
   </style>
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .club-name {
+                font-size: 2rem;
+            }
+            .button-group {
+                justify-content: center;
+                width: 100%;
+            }
+            .btn {
+                flex-grow: 1;
+            }
+            .ranking-table th,
+            .ranking-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .dashboard-container {
+                padding: 20px;
+            }
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            .club-name {
+                font-size: 1.8rem;
+            }
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="dashboard-container">
-    <div class="header">
-      <div class="button-group">
-        <button class="btn active" data-format="T20">T20</button>
-        <button class="btn" data-format="ODI">ODI</button>
-        <button class="btn" data-format="Tests">Tests</button>
-      </div>
-      <div class="logo-container">
-        <img src="photo_2025-07-20_16-42-14-removebg-preview.png" class="logo" alt="MCC Logo">
-        <div class="club-name">MCC</div>
-      </div>
-      <div class="button-group">
-        <button class="btn active" data-type="Batsmen">Batsmen</button>
-        <button class="btn" data-type="Bowler">Bowler</button>
-        <button id="signInBtn">Sign In (Admin)</button>
-      </div>
+  <img src="photo_2025-07-20_16-42-14-removebg-preview.png" alt="MCC Logo" class="logo">
+  <h1>MCC Player Ranking Dashboard</h1>
+    <div class="dashboard-container">
+        <div class="header">
+            <div class="button-group">
+                <button class="btn active" data-format="T20">T20</button>
+                <button class="btn" data-format="ODI">ODI</button>
+                <button class="btn" data-format="Tests">Tests</button>
+            </div>
+            <div class="logo-container">
+                <img src="photo_2025-07-20_16-42-14-removebg-preview.png" alt="MCC Logo" class="logo">
+                <h1 class="club-name"></h1>
+            </div>
+            <div class="button-group">
+                <button class="btn active" data-type="Batsmen">Batsmen</button>
+                <button class="btn" data-type="Bowler">Bowler</button>
+            </div>
+        </div>
+
+  <div class="container">
+    <div class="side-panel" id="format-buttons">
+      <button onclick="setFormat('T20')">T20</button>
+      <button onclick="setFormat('ODI')">ODI</button>
+      <button onclick="setFormat('Test')">Test</button>
+        <div class="ranking-table-container">
+            <table class="ranking-table" id="rankingTable">
+                <thead>
+                    <tr>
+                        <th>Ranking</th>
+                        <th>Player Name</th>
+                        <th>Runs</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Player data will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="ranking-table-container">
-      <table class="ranking-table" id="rankingTable">
+
+    <div class="ranking-table">
+      <table>
         <thead>
           <tr>
-            <th>Ranking</th>
-            <th>Player Name</th>
-            <th>Runs</th>
-            <th>Points</th>
+            <tr>
+                <th>Rank</th>
+                <th>Player Name</th>
+                <th id="stat-header">Runs</th>
+                <th>Points</th>
+            </tr>
+    <script>
+        // Sample data for players
+        const playerData = {
+            T20: {
+                Batsmen: [
+                    { rank: 1, name: "Animesh", runs: 325, points: 162.5 },
+                    { rank: 2, name: "Sayan", runs: 162, points: 81.0  },
+                    { rank: 3, name: "Deepanshu", runs: 123, points: 61.5},
+                    { rank: 4, name: "Saahil", runs: 117, points: 58.5 },
+                    { rank: 5, name: "Manthan", runs: 114, points: 57.0 }
+                ],
+                Bowler: [
+                    { rank: 1, name: "Sujal", wickets: 10, points: 100.0 },
+                    { rank: 2, name: "Farhan", wickets: 9, points: 90.0 },
+                    { rank: 3, name: "Junaid", wickets: 8, points: 80.0 },
+                    { rank: 4, name: "Sameer Siddiqui", wickets: 7, points: 70.0 },
+                    { rank: 5, name: "Manthan", wickets: 7, points: 70.0 }
+                ]
+            },
+            ODI: {
+                Batsmen: [
+                    { rank: 1, name: "No Data Available", runs: 0, points: 0 },
+                    { rank: 2, name: "No Data Available", runs: 0, points: 0 },
+                    { rank: 3, name: "No Data Available", runs: 0, points: 0 },
+                    { rank: 4, name: "No Data Available", runs: 0, points: 0 },
+                    { rank: 5, name: "No Data Available", runs: 0, points: 0 }
+                ]
+                ,
+                Bowler: [
+                    { rank: 1, name: "No Data Available", wickets: 0, points: 0 },
+                    { rank: 2, name: "No Data Available", wickets: 0, points: 0 },
+                    { rank: 3, name: "No Data Available", wickets: 0, points: 0 },
+                    { rank: 4, name: "No Data Available", wickets: 0, points: 0 },
+                    { rank: 5, name: "No Data Available", wickets: 0, points: 0 }
+                ]
+            },
+            Tests: {
+                Batsmen: [
+                    { rank: 1, name: "Deepanshu", runs: 100, points: 30 },
+                    { rank: 2, name: "Manthan", runs: 84, points: 25.2 },
+                    { rank: 3, name: "Sayan", runs: 51, points: 15.3 },
+                    { rank: 4, name: "Ankit", runs: 43, points: 12.9 },
+                    { rank: 5, name: "Animesh", runs: 41, points: 12.3 }
+                ],
+                Bowler: [
+                    { rank: 1, name: "Deepanshu", wickets: 17, points: 340.0 },
+                    { rank: 2, name: "Vishu", wickets: 11, points: 220.0 },
+                    { rank: 3, name: "Manthan", wickets: 8, points: 160.0 },
+                    { rank: 4, name: "Rahul", wickets: 6, points: 120.0 },
+                    { rank: 5, name: "Ayaan", wickets: 5, points: 100.0 }
+                ]
+            }
+        };
+
           </tr>
         </thead>
-        <tbody>
-          <!-- Player data via JS -->
+        <tbody id="ranking-body">
+          <!-- Data will be inserted here -->
         </tbody>
       </table>
     </div>
-  </div>
-  <!-- Modal Overlay -->
-  <div id="adminModal">
-    <div class="admin-modal-content" id="adminModalContent">
-      <button type="button" class="btn-close" id="closeAdminModal">&times;</button>
-      <div id="adminLoginPanel" style="margin-top:8px;">
-        <h2>Admin Sign In</h2>
-        <form id="adminLoginForm" autocomplete="off" style="margin-top:12px;">
-          <label>Username:
-            <input type="text" id="adminUsername" required autocomplete="username">
-          </label><br>
-          <label>Password:
-            <input type="password" id="adminPassword" required autocomplete="current-password">
-          </label>
-          <div class="admin-controls">
-            <button type="submit" class="btn active" style="padding:7px 20px;">Sign In</button>
-            <button type="button" class="btn" id="cancelAdminModal" style="padding:7px 20px;">Cancel</button>
-          </div>
-          <div id="adminLoginError" class="admin-error" style="display:none;"></div>
-        </form>
-      </div>
-      <div id="adminEditPanel" style="display:none;">
-        <button type="button" class="btn-logout" id="adminLogout">Sign Out</button>
-        <h2>Edit Rankings <span id="editFormat" style="font-size:.72em;color:#fb8500"></span></h2>
-        <form id="adminEditForm" autocomplete="off">
-          <div id="adminPlayerInputs" style="margin-top:1.2rem;"></div>
-          <div class="admin-controls">
-            <button type="submit" class="btn active" style="padding:8px 15px;min-width:80px;">Save</button>
-            <button type="button" class="btn" id="cancelEditPanel" style="padding:8px 15px;min-width:80px;">Cancel</button>
-          </div>
-          <div class="mt-2" id="adminSavedText" style="font-size:.98em;color:#088d26;display:none;">Saved! Refresh to see changes.</div>
-        </form>
-      </div>
+        let currentFormat = 'T20';
+        let currentPlayerType = 'Batsmen';
+
+    <div class="side-panel" id="role-buttons">
+      <button onclick="setRole('Batsman')">Batsmen</button>
+      <button onclick="setRole('Bowler')">Bowlers</button>
     </div>
   </div>
+        const formatButtons = document.querySelectorAll('.button-group:first-of-type .btn');
+        const typeButtons = document.querySelectorAll('.button-group:last-of-type .btn');
+        const rankingTableBody = document.querySelector('#rankingTable tbody');
+
   <script>
-    // Player data structure
-    let playerData = {
+    const sampleData = {
       T20: {
-        Batsmen: [
-          { rank: 1, name: "Animesh", runs: 325, points: 162.5 },
-          { rank: 2, name: "Sayan", runs: 162, points: 81.0  },
-          { rank: 3, name: "Deepanshu", runs: 123, points: 61.5},
-          { rank: 4, name: "Saahil", runs: 117, points: 58.5 },
-          { rank: 5, name: "Manthan", runs: 114, points: 57.0 }
+        Batsman: [
+          ['1', 'Animesh', 325, 65.0],
+          ['2', 'Sayan', 165, 33.0],
+          ['3', 'Deepanshu', 123, 24.6],
+          ['4', 'Saahil', 117, 23.4],
+          ['5', 'Manthan', 114, 22.8]
         ],
         Bowler: [
-          { rank: 1, name: "Sujal", wickets: 10, points: 100.0 },
-          { rank: 2, name: "Farhan", wickets: 9, points: 90.0 },
-          { rank: 3, name: "Junaid", wickets: 8, points: 80.0 },
-          { rank: 4, name: "Sameer Siddiqui", wickets: 7, points: 70.0 },
-          { rank: 5, name: "Manthan", wickets: 7, points: 70.0 }
+          ['1', 'Sujal', 10, 5.0],
+          ['2', 'Farhan', 9, 4.5],
+          ['3', 'Junaid', 8, 4.0],
+          ['4', 'Sameer Siddiqui', 7, 3.5],
+          ['5', 'Manthan', 7, 3.5]
         ]
       },
       ODI: {
-        Batsmen: [
-          { rank: 1, name: "No Data Available", runs: 0, points: 0 },
-          { rank: 2, name: "No Data Available", runs: 0, points: 0 },
-          { rank: 3, name: "No Data Available", runs: 0, points: 0 },
-          { rank: 4, name: "No Data Available", runs: 0, points: 0 },
-          { rank: 5, name: "No Data Available", runs: 0, points: 0 }
+        Batsman: [
+          ['1', 'No Data Available', 0, 0],
+          ['2', 'No Data Available', 0, 0],
+          ['3', 'No Data Available', 0, 0],
+          ['4', 'No Data Available', 0, 0],
+          ['5', 'No Data Available', 0, 0]
         ],
         Bowler: [
-          { rank: 1, name: "No Data Available", wickets: 0, points: 0 },
-          { rank: 2, name: "No Data Available", wickets: 0, points: 0 },
-          { rank: 3, name: "No Data Available", wickets: 0, points: 0 },
-          { rank: 4, name: "No Data Available", wickets: 0, points: 0 },
-          { rank: 5, name: "No Data Available", wickets: 0, points: 0 }
+          ['1', 'No Data Available', 0, 0],
+          ['2', 'No Data Available', 0, 0],
+          ['3', 'No Data Available', 0, 0],
+          ['4', 'No Data Available', 0, 0],
+          ['5', 'No Data Available', 0, 0]
         ]
       },
-      Tests: {
-        Batsmen: [
-          { rank: 1, name: "Deepanshu", runs: 100, points: 30 },
-          { rank: 2, name: "Manthan", runs: 84, points: 25.2 },
-          { rank: 3, name: "Sayan", runs: 51, points: 15.3 },
-          { rank: 4, name: "Ankit", runs: 43, points: 12.9 },
-          { rank: 5, name: "Animesh", runs: 41, points: 12.3 }
+      Test: {
+        Batsman: [
+          ['1', 'Deepanshu', 100, 20],
+          ['2', 'Manthan', 84, 16.8],
+          ['3', 'Sayan', 51, 10.2],
+          ['4', 'Ankit', 43, 8.6],
+          ['5', 'Animesh', 41, 8.2]
         ],
         Bowler: [
-          { rank: 1, name: "Deepanshu", wickets: 17, points: 340.0 },
-          { rank: 2, name: "Vishu", wickets: 11, points: 220.0 },
-          { rank: 3, name: "Manthan", wickets: 8, points: 160.0 },
-          { rank: 4, name: "Rahul", wickets: 6, points: 120.0 },
-          { rank: 5, name: "Ayaan", wickets: 5, points: 100.0 }
+          ['1', 'Deepanshu', 17, 8.5],
+          ['2', 'Vishu', 11, 5.5],
+          ['3', 'Manthan', 8, 4.0],
+          ['4', 'Rahul', 6, 3.0],
+          ['5', 'Ayaan', 5, 2.5]
         ]
       }
     };
+        // Function to update the table based on selected format and player type
+        function updateTable() {
+            const data = playerData[currentFormat][currentPlayerType];
+            rankingTableBody.innerHTML = ''; // Clear existing rows
 
-    let currentFormat = 'T20', currentPlayerType = 'Batsmen';
+    let currentFormat = 'T20';
+    let currentRole = 'Batsman';
+            data.forEach(player => {
+                const row = document.createElement('tr');
+                const valueKey = currentPlayerType === 'Batsmen' ? 'runs' : 'wickets';
+                row.innerHTML = `
+                    <td>${player.rank}</td>
+                    <td>${player.name}</td>
+                    <td>${player[valueKey]}</td>
+                    <td>${player.points}</td>
+                `;
+                rankingTableBody.appendChild(row);
+            });
+        }
 
-    function updateTable() {
-      const data = playerData[currentFormat][currentPlayerType];
-      const tbody = document.querySelector('#rankingTable tbody');
+    function renderTable() {
+      const tbody = document.getElementById('ranking-body');
       tbody.innerHTML = '';
-      data.forEach(player => {
-        const row = document.createElement('tr');
-        const statKey = currentPlayerType==='Batsmen'?'runs':'wickets';
-        row.innerHTML = `
-          <td>${player.rank}</td>
-          <td>${player.name}</td>
-          <td>${player[statKey]}</td>
-          <td>${player.points}</td>
-        `;
-        tbody.appendChild(row);
+      const data = sampleData[currentFormat][currentRole];
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        row.forEach(col => {
+          const td = document.createElement('td');
+          td.textContent = col;
+          tr.appendChild(td);
+        // Event listeners for format buttons
+        formatButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                formatButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentFormat = button.dataset.format;
+                updateTable();
+            });
+        });
+        tbody.appendChild(tr);
       });
     }
 
-    const formatButtons = document.querySelectorAll('.button-group:first-of-type .btn');
-    const typeButtons = document.querySelectorAll('.button-group:last-of-type .btn');
-
-    formatButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        formatButtons.forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFormat = btn.dataset.format;
-        updateTable();
-      });
-    });
-    typeButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        typeButtons.forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        currentPlayerType = btn.dataset.type;
-        const th = document.querySelector('#rankingTable th:nth-child(3)');
-        th.textContent = currentPlayerType==='Batsmen'?'Runs':'Wickets';
-        updateTable();
-      });
-    });
-
-    document.addEventListener('DOMContentLoaded', updateTable);
-
-    // Admin/Modal Logic
-    const ADMIN_USER='admin', ADMIN_PASS='admin123';
-    // modal elements
-    const signInBtn = document.getElementById('signInBtn'),
-          adminModal = document.getElementById('adminModal'),
-          adminModalContent = document.getElementById('adminModalContent'),
-          adminLoginPanel = document.getElementById('adminLoginPanel'),
-          adminLoginForm = document.getElementById('adminLoginForm'),
-          adminUsername = document.getElementById('adminUsername'),
-          adminPassword = document.getElementById('adminPassword'),
-          adminLoginError = document.getElementById('adminLoginError'),
-          adminEditPanel = document.getElementById('adminEditPanel'),
-          adminEditForm = document.getElementById('adminEditForm'),
-          adminPlayerInputs = document.getElementById('adminPlayerInputs'),
-          adminSavedText = document.getElementById('adminSavedText'),
-          closeAdminModal = document.getElementById('closeAdminModal'),
-          cancelAdminModal = document.getElementById('cancelAdminModal'),
-          cancelEditPanel = document.getElementById('cancelEditPanel'),
-          adminLogout = document.getElementById('adminLogout'),
-          editFormat = document.getElementById('editFormat');
-    let isAdmin=false;
-
-    function openAdminModal() {
-      adminSavedText && (adminSavedText.style.display="none");
-      adminModal.classList.add('active');
-      if(isAdmin) showEditPanel(); else showLoginPanel();
-    }
-    function closeModal(){ adminModal.classList.remove('active'); showLoginPanel();}
-    signInBtn.onclick=openAdminModal;
-    closeAdminModal && (closeAdminModal.onclick=closeModal);
-    cancelAdminModal && (cancelAdminModal.onclick=closeModal);
-    cancelEditPanel && (cancelEditPanel.onclick=closeModal);
-    adminModal.onclick = (e) => { if (e.target===adminModal) closeModal(); };
-
-    function showLoginPanel() {
-      adminLoginPanel.style.display = '';
-      adminEditPanel.style.display = 'none';
-      adminLoginError.style.display = 'none';
-      adminUsername.value = ''; adminPassword.value = '';
-    }
-    function showEditPanel() {
-      adminLoginPanel.style.display = 'none';
-      adminEditPanel.style.display = '';
-      adminSavedText.style.display = "none";
-      // inputs
-      const data = playerData[currentFormat][currentPlayerType];
-      editFormat.textContent = `(${currentFormat} ${currentPlayerType})`;
-      let html = '';
-      data.forEach((player, idx) => {
-        let statKey = currentPlayerType === 'Batsmen' ? 'runs' : 'wickets';
-        html += `
-        <div class="admin-player-edit">
-          <label>Rank #${player.rank}</label><br>
-          <label>Name: <input type="text" name="name${idx}" value="${player.name}"></label><br>
-          <label>${currentPlayerType==='Batsmen'?'Runs':'Wickets'}:
-            <input type="number" name="stat${idx}" value="${player[statKey]}" ${currentPlayerType==='Bowler' ? 'step="any"' : ''}></label><br>
-          <label>Points: <input type="number" step="any" name="points${idx}" value="${player.points}"></label>
-        </div>`;
-      });
-      adminPlayerInputs.innerHTML = html;
+    function updateStatHeader() {
+        const statHeader = document.getElementById('stat-header');
+        statHeader.textContent = currentRole === 'Bowler' ? 'Wickets' : 'Runs';
     }
 
-    adminLoginForm.onsubmit=function(e){
-      e.preventDefault();
-      adminLoginError.style.display='none';
-      const u=adminUsername.value.trim(),p=adminPassword.value.trim();
-      if(u===ADMIN_USER&&p===ADMIN_PASS){isAdmin=true;showEditPanel();}
-      else {
-        adminLoginError.textContent="Incorrect username or password.";
-        adminLoginError.style.display='';
-        adminPassword.value='';
-      }
-    };
-    adminLogout && (adminLogout.onclick=function(){isAdmin=false;showLoginPanel();});
-    adminEditForm.onsubmit=function(e){
-      e.preventDefault();
-      const data = playerData[currentFormat][currentPlayerType];
-      for(let idx=0;idx<data.length;++idx){
-        data[idx].name = adminEditForm[`name${idx}`].value;
-        let statValue=adminEditForm[`stat${idx}`].value;
-        data[idx][currentPlayerType==='Batsmen'?'runs':'wickets']=statValue*1;
-        data[idx].points = parseFloat(adminEditForm[`points${idx}`].value)||0;
-      }
-      updateTable();
-      adminSavedText.style.display="";
-      setTimeout(()=>{adminSavedText.style.display="none";closeModal();},1200);
-    };
+    function setFormat(format) {
+        currentFormat = format;
+        renderTable();
+        updateStatHeader();
+    }
 
+    function setRole(role) {
+        currentRole = role;
+        renderTable();
+        updateStatHeader();
+    }
+        // Event listeners for player type buttons
+        typeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                typeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentPlayerType = button.dataset.type;
+                // Update the header of the table based on player type
+                const runsHeader = document.querySelector('#rankingTable th:nth-child(3)');
+                runsHeader.textContent = currentPlayerType === 'Batsmen' ? 'Runs' : 'Wickets';
+                updateTable();
+            });
+        });
+
+    // Initial render
+    renderTable();
   </script>
+        // Initial table load
+        document.addEventListener('DOMContentLoaded', updateTable);
+    </script>
 </body>
 </html>
